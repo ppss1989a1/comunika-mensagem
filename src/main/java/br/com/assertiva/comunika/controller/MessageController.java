@@ -1,7 +1,7 @@
 package br.com.assertiva.comunika.controller;
 
-import br.com.assertiva.comunika.domain.IncluirMensagensPorLoteRequest;
-import br.com.assertiva.comunika.domain.Mensagem;
+import br.com.assertiva.comunika.domain.CreateMessagesRequest;
+import br.com.assertiva.comunika.domain.Message;
 import br.com.assertiva.comunika.service.MensagemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,24 +16,24 @@ public class MessageController {
     @Autowired
     private MensagemService mensagemService;
 
-    @GetMapping(value = "/lote/{loteId}")
+    @GetMapping(value = "/batch/{loteId}")
     public ResponseEntity buscarTodasMensagensDoLote(@PathVariable Integer loteId) {
 
-        List<Mensagem> lstMensagem = mensagemService.buscarTodasMensagens(loteId);
+        List<Message> lstMensagem = mensagemService.buscarTodasMensagens(loteId);
 
         return ResponseEntity.ok().body(lstMensagem.size());
     }
 
-    @GetMapping(value = "/mensagem/{idMensagem}")
+    @GetMapping(value = "/message/{idMensagem}")
     public ResponseEntity buscarMensagemPorId(@PathVariable Integer idMensagem) {
 
-        List<Mensagem> lstMensagem = mensagemService.buscarTodasMensagens(idMensagem);
+        List<Message> lstMensagem = mensagemService.buscarTodasMensagens(idMensagem);
 
         return ResponseEntity.ok().body(lstMensagem);
     }
 
     @PostMapping
-    public ResponseEntity incluirMensagensPorLote(@RequestBody IncluirMensagensPorLoteRequest request) {
+    public ResponseEntity incluirMensagensPorLote(@RequestBody CreateMessagesRequest request) {
 
         String msg = mensagemService.salvarMensagens(request);
 

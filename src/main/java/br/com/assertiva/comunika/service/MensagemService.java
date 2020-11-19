@@ -1,8 +1,8 @@
 package br.com.assertiva.comunika.service;
 
-import br.com.assertiva.comunika.domain.IncluirMensagensPorLoteRequest;
-import br.com.assertiva.comunika.domain.Lote;
-import br.com.assertiva.comunika.domain.Mensagem;
+import br.com.assertiva.comunika.domain.Batch;
+import br.com.assertiva.comunika.domain.CreateMessagesRequest;
+import br.com.assertiva.comunika.domain.Message;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.repository.MensagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,42 +19,48 @@ public class MensagemService {
     @Autowired
     MensagemRepository mensagemRepository;
 
-    public List<Mensagem> buscarTodasMensagens(Integer loteId) {
+    public List<Message> buscarTodasMensagens(Integer loteId) {
 
-        List<Mensagem> list = mensagemRepository.mensagensDoLote(loteId);
+        List<Message> list = mensagemRepository.mensagensDoLote(loteId);
 
         return list;
     }
 
-    public Mensagem buscarMensagemPorId(Integer idMensagem) throws BadRequestException {
+    public Message buscarMensagemPorId(Integer idMensagem) throws BadRequestException {
 
-        Optional<Mensagem> mensagem = mensagemRepository.findById(idMensagem);
+        Optional<Message> mensagem = mensagemRepository.findById(idMensagem);
 
-        return mensagem.orElseThrow(() -> new BadRequestException("spooky"));
+        return mensagem.orElseThrow(() -> new BadRequestException("Mensagem Não Encontrada"));
     }
 
-    public String salvarMensagens(IncluirMensagensPorLoteRequest request) {
+    public String salvarMensagens(CreateMessagesRequest request) {
 
-        List<Mensagem> lstMensagem = new ArrayList<>();
+        String retorno = "";
+
+        List<Message> lstMensagem = new ArrayList<>();
         Integer count = 0;
 
-        for (Lote lote : request.getLstLote()) {
+        for (Batch batch : request.getBatches()) {
 
-            for (int i = 0; i < lote.getMessageAmount(); i++) {
+            retorno += batch.getMessageAmount() + " Mensagens foram salvas referente ao lote: " + batch.getBatch() + ", ";
 
-                Mensagem mensagem = new Mensagem();
-                mensagem.setInclusao(LocalDateTime.now().toString());
-                mensagem.setLoteId(lote.getBatchId());
-                mensagem.setMensagem(request.getMensagem());
-                mensagem.setNumero(request.getLstNumeros().get(count));
-                mensagem.setStatus(lote.getStatus());
+            for (int i = 0; i < batch.getMessageAmount(); i++) {
+
+                Message mensagem = new Message();
+                mensagem.setCreated_at(LocalDateTime.now().toString());
+                mensagem.setBatch(batch.getBatch());
+                mensagem.setMessage(request.getMensagem());
+                mensagem.setNumber(request.getLstNumeros().get(count));
+                mensagem.setStatus(batch.getStatus());
 
                 lstMensagem.add(mensagem);
                 count++;
             }
         }
 
-        return "Mensagens Salvas";
+        mensagemRepository.saveAll(lstMensagem);
+
+        return retorno;
     }
 
 
