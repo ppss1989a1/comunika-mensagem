@@ -1,14 +1,16 @@
 package br.com.assertiva.comunika.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IncluirMensagensPorLoteRequest {
+@Data
+public class CreateMessagesRequest {
 
     @JsonProperty("batches")
-    List<Lote> lstLote = new ArrayList<>();
+    List<Batch> batches = new ArrayList<>();
 
     @JsonProperty("numbers")
     List<String> lstNumeros = new ArrayList<>();
@@ -16,15 +18,15 @@ public class IncluirMensagensPorLoteRequest {
     @JsonProperty("message")
     String mensagem;
 
-    public IncluirMensagensPorLoteRequest() {
+    public CreateMessagesRequest() {
     }
 
-    public List<Lote> getLstLote() {
-        return lstLote;
+    public List<Batch> getBatches() {
+        return batches;
     }
 
-    public void setLstLote(List<Lote> lstLote) {
-        this.lstLote = lstLote;
+    public void setBatches(List<Batch> batches) {
+        this.batches = batches;
     }
 
     public List<String> getLstNumeros() {
