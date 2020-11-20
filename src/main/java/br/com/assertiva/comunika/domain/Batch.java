@@ -15,8 +15,7 @@ public class Batch {
     @JsonProperty("status")
     Integer status;
 
-    public Batch() {
-    }
+    public Batch() {}
 
 
 

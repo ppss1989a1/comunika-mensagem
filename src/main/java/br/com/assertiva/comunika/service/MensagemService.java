@@ -1,8 +1,8 @@
 package br.com.assertiva.comunika.service;
 
 import br.com.assertiva.comunika.domain.Batch;
-import br.com.assertiva.comunika.domain.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.Message;
+import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.repository.MensagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +35,9 @@ public class MensagemService {
 
     public String salvarMensagens(CreateMessagesRequest request) {
 
-        String retorno = "";
-
         List<Message> lstMensagem = new ArrayList<>();
         Integer count = 0;
+        String retorno = "";
 
         for (Batch batch : request.getBatches()) {
 
@@ -62,6 +61,4 @@ public class MensagemService {
 
         return retorno;
     }
-
-
 }

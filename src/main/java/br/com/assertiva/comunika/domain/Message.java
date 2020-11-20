@@ -19,6 +19,5 @@ public class Message implements Serializable {
     Integer status;
     String created_at;
 
-    public Message() {
-    }
+    public Message() {}
 }

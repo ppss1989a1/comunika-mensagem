@@ -1,7 +1,7 @@
 package br.com.assertiva.comunika.controller;
 
-import br.com.assertiva.comunika.domain.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.Message;
+import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.service.MensagemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,5 +1,6 @@
-package br.com.assertiva.comunika.domain;
+package br.com.assertiva.comunika.domain.requests;
 
+import br.com.assertiva.comunika.domain.Batch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
