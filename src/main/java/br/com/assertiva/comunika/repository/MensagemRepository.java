@@ -12,4 +12,7 @@ public interface MensagemRepository extends MongoRepository<Message, Integer> {
 
     @Query(value = "{ 'loteId': ?0 }")
     List<Message> mensagensDoLote(Integer loteId);
+
+    @Query(value = "{ 'id': ?0 }")
+    Message idMessages(String id);
 }

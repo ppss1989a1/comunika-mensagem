@@ -1,23 +1,19 @@
 package br.com.assertiva.comunika.domain.requests;
 
 import br.com.assertiva.comunika.domain.Batch;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 public class CreateMessagesRequest {
 
-    @JsonProperty("batches")
     List<Batch> batches = new ArrayList<>();
 
-    @JsonProperty("numbers")
-    List<String> lstNumeros = new ArrayList<>();
+    List<String> numbers = new ArrayList<>();
 
-    @JsonProperty("message")
-    String mensagem;
+    Integer campaignId;
+
+    String message;
 
     public CreateMessagesRequest() {
     }
@@ -30,19 +26,27 @@ public class CreateMessagesRequest {
         this.batches = batches;
     }
 
-    public List<String> getLstNumeros() {
-        return lstNumeros;
+    public List<String> getNumbers() {
+        return numbers;
     }
 
-    public void setLstNumeros(List<String> lstNumeros) {
-        this.lstNumeros = lstNumeros;
+    public void setNumbers(List<String> numbers) {
+        this.numbers = numbers;
     }
 
-    public String getMensagem() {
-        return mensagem;
+    public Integer getCampaignId() {
+        return campaignId;
     }
 
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
+    public void setCampaignId(Integer campaignId) {
+        this.campaignId = campaignId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
