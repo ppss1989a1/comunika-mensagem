@@ -17,10 +17,12 @@ public class Message implements Serializable {
     String phone;
     String message;
     Integer status;
+    Integer routeId;
     LocalDateTime updated_at;
     String schedule;
 
-    public Message() {}
+    public Message() {
+    }
 
     public String getId() {
         return id;
@@ -84,5 +86,13 @@ public class Message implements Serializable {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
+    }
+
+    public Integer getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(Integer routeId) {
+        this.routeId = routeId;
     }
 }

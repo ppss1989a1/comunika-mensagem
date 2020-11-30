@@ -4,6 +4,7 @@ import br.com.assertiva.comunika.domain.Message;
 import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.FindByIdRequest;
 import br.com.assertiva.comunika.domain.requests.RequestResponseZenvia;
+import br.com.assertiva.comunika.domain.responses.ResponseBatchMessages;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.service.MensagemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class MessageController {
 
         List<Message> lstMensagem = mensagemService.buscarTodasMensagens(loteId);
 
-        return ResponseEntity.ok().body(lstMensagem.size());
+        return ResponseEntity.ok().body(new ResponseBatchMessages(lstMensagem));
     }
 
     @GetMapping(value = "/message/{id}")
