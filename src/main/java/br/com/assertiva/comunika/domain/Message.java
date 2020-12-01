@@ -1,5 +1,6 @@
 package br.com.assertiva.comunika.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,14 +13,30 @@ public class Message implements Serializable {
 
     @Id
     String id;
+
+    @JsonProperty("batchId")
     Integer batchId;
+
+    @JsonProperty("campaignId")
     Integer campaignId;
+
+    @JsonProperty("phone")
     String phone;
+
+    @JsonProperty("message")
     String message;
+
+    @JsonProperty("status")
     Integer status;
+
+    @JsonProperty("routeId")
     Integer routeId;
-    LocalDateTime updated_at;
-    String schedule;
+
+    @JsonProperty("updatedAt")
+    LocalDateTime updatedAt;
+
+    @JsonProperty("schedule")
+    LocalDateTime schedule;
 
     public Message() {
     }
@@ -72,19 +89,19 @@ public class Message implements Serializable {
         this.status = status;
     }
 
-    public LocalDateTime getUpdated_at() {
-        return updated_at;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public String getSchedule() {
+    public LocalDateTime getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(String schedule) {
+    public void setSchedule(LocalDateTime schedule) {
         this.schedule = schedule;
     }
 

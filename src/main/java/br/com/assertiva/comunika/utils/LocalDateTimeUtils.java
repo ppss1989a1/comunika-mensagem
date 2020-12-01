@@ -4,8 +4,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Locale;
 
 public class LocalDateTimeUtils {
 
@@ -20,17 +18,12 @@ public class LocalDateTimeUtils {
     public static Clock clock = Clock.system(zoneId);
 
     public LocalDateTime nowFortaleza() {
-        return LocalDateTime.now(clock);
-    }
-
-    public String localDateParse(String jsonParser) {
-        return String.valueOf(LocalDateTime.parse(jsonParser, new DateTimeFormatterBuilder().appendPattern("dd/MM/yyyy HH:mm:ss").toFormatter(Locale.ENGLISH)));
+        return stringToDate(LocalDateTime.now(clock).format(formatterDataHora));
     }
 
     public LocalDateTime stringToDate(String dataString) {
 
-        LocalDateTime localDateTime = LocalDateTime.parse(dataString, formatterDataHora);
-        return localDateTime;
+        return LocalDateTime.parse(dataString, formatterDataHora);
     }
 
     public LocalDateTime formatLocalDate(LocalDateTime date) {

@@ -2,8 +2,10 @@ package br.com.assertiva.comunika.service;
 
 import br.com.assertiva.comunika.domain.Batch;
 import br.com.assertiva.comunika.domain.Message;
+import br.com.assertiva.comunika.domain.enums.AssertivaStatusMessage;
 import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.ResponseZenvia;
+import br.com.assertiva.comunika.domain.responses.MessagesCount;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.repository.MensagemRepository;
 import br.com.assertiva.comunika.utils.LocalDateTimeUtils;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,6 @@ public class MensagemService {
     LocalDateTimeUtils dateTimeUtils = new LocalDateTimeUtils();
 
     private static final Logger logger = LoggerFactory.getLogger(MensagemService.class);
-
 
     @Autowired
     MensagemRepository mensagemRepository;
@@ -48,7 +48,7 @@ public class MensagemService {
 
         List<Message> lstToUpdate = new ArrayList<>();
 
-        messages.forEach( response -> {
+        messages.forEach(response -> {
 
             Message message = new Message();
 
@@ -58,8 +58,8 @@ public class MensagemService {
             message.setMessage(response.getMessage());
             message.setCampaignId(response.getCampaignId());
             message.setBatchId(response.getBatchId());
-            message.setUpdated_at(dateTimeUtils.nowFortaleza());
-            message.setSchedule(dateTimeUtils.localDateParse(response.getSchedule()));
+            message.setUpdatedAt(dateTimeUtils.nowFortaleza());
+            message.setSchedule(dateTimeUtils.stringToDate(response.getSchedule()));
 
             lstToUpdate.add(message);
         });
@@ -70,29 +70,79 @@ public class MensagemService {
     public List<Message> salvarMensagens(CreateMessagesRequest request) {
 
         List<Message> lstMensagem = new ArrayList<>();
-        Integer count = 0;
-        String retorno = "";
+
+        if (request.getBlacklistNumbers().isEmpty()) {
+            createMessagesWithoutBlacklistVerification(request, lstMensagem);
+        } else {
+            createMessagesWithBlacklistVerification(request, lstMensagem);
+        }
+
+        return mensagemRepository.saveAll(lstMensagem);
+    }
+
+    private void createMessagesWithBlacklistVerification(CreateMessagesRequest request, List<Message> lstMensagem) {
+
+        int count = 0;
 
         for (Batch batch : request.getBatches()) {
-
-            retorno += batch.getMessageAmount() + " Mensagens foram salvas referente ao lote: " + batch.getBatchId() + ", ";
 
             for (int i = 0; i < batch.getMessageAmount(); i++) {
 
                 Message mensagem = new Message();
-                mensagem.setUpdated_at(dateTimeUtils.nowFortaleza());
+                mensagem.setUpdatedAt(dateTimeUtils.nowFortaleza());
                 mensagem.setBatchId(batch.getBatchId());
                 mensagem.setMessage(request.getMessage());
                 mensagem.setPhone(request.getNumbers().get(count));
-                mensagem.setStatus(batch.getStatus());
-                mensagem.setCampaignId(request.getCampaignId());
+                mensagem.setCampaignId(request.getCampaign().getId());
+                mensagem.setRouteId(request.getCampaign().getRouteId());
+
+                if (request.getBlacklistNumbers().stream().anyMatch(phone -> mensagem.getPhone().equals(phone))) {
+                    mensagem.setStatus(AssertivaStatusMessage.BLACKLIST.getId());
+                } else {
+                    mensagem.setStatus(batch.getStatus());
+                }
 
                 lstMensagem.add(mensagem);
                 count++;
             }
         }
+    }
 
-        return mensagemRepository.saveAll(lstMensagem);
+    private void createMessagesWithoutBlacklistVerification(CreateMessagesRequest request, List<Message> lstMensagem) {
 
+        int count = 0;
+
+        for (Batch batch : request.getBatches()) {
+
+            for (int i = 0; i < batch.getMessageAmount(); i++) {
+
+                Message mensagem = new Message();
+                mensagem.setUpdatedAt(dateTimeUtils.nowFortaleza());
+                mensagem.setBatchId(batch.getBatchId());
+                mensagem.setMessage(request.getMessage());
+                mensagem.setPhone(request.getNumbers().get(count));
+                mensagem.setStatus(batch.getStatus());
+                mensagem.setCampaignId(request.getCampaign().getId());
+                mensagem.setRouteId(request.getCampaign().getRouteId());
+
+                lstMensagem.add(mensagem);
+                count++;
+            }
+        }
+    }
+
+    public MessagesCount findMessageStatusByCampaign(Integer campaignId) {
+
+        List<Message> lst = mensagemRepository.campaignMessages(campaignId);
+
+        Long sendedWithConfirmation = lst.stream().filter(msg -> AssertivaStatusMessage.SENDED_WITH_CONFIRMATION.getId().equals(msg.getStatus())).count();
+        Long sendedWithoutConfirmation = lst.stream().filter(msg -> AssertivaStatusMessage.SENDED_WITHOUT_CONFIRMATION.getId().equals(msg.getStatus())).count();
+        Long blacklist = lst.stream().filter(msg -> AssertivaStatusMessage.BLACKLIST.getId().equals(msg.getStatus())).count();
+        Long canceled = lst.stream().filter(msg -> AssertivaStatusMessage.CANCELED.getId().equals(msg.getStatus())).count();
+        Long error = lst.stream().filter(msg -> AssertivaStatusMessage.ERROR.getId().equals(msg.getStatus())).count();
+        Long paused = lst.stream().filter(msg -> AssertivaStatusMessage.STOPPED.getId().equals(msg.getStatus())).count();
+        Long waitingToSend = lst.stream().filter(msg -> AssertivaStatusMessage.WAITING_TO_SEND.getId().equals(msg.getStatus())).count();
+
+        return new MessagesCount(sendedWithConfirmation, sendedWithoutConfirmation, waitingToSend, canceled, paused, blacklist, error);
     }
 }

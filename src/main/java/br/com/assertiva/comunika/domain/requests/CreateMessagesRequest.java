@@ -1,19 +1,28 @@
 package br.com.assertiva.comunika.domain.requests;
 
 import br.com.assertiva.comunika.domain.Batch;
+import br.com.assertiva.comunika.domain.Campaign;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreateMessagesRequest {
 
+    @JsonProperty("batches")
     List<Batch> batches = new ArrayList<>();
 
+    @JsonProperty("numbers")
     List<String> numbers = new ArrayList<>();
 
-    Integer campaignId;
+    @JsonProperty("campaign")
+    Campaign campaign;
 
+    @JsonProperty("message")
     String message;
+
+    @JsonProperty("blacklistNumbers")
+    List<String> blacklistNumbers = new ArrayList<>();
 
     public CreateMessagesRequest() {
     }
@@ -34,12 +43,12 @@ public class CreateMessagesRequest {
         this.numbers = numbers;
     }
 
-    public Integer getCampaignId() {
-        return campaignId;
+    public Campaign getCampaign() {
+        return campaign;
     }
 
-    public void setCampaignId(Integer campaignId) {
-        this.campaignId = campaignId;
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
     }
 
     public String getMessage() {
@@ -48,5 +57,13 @@ public class CreateMessagesRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<String> getBlacklistNumbers() {
+        return blacklistNumbers;
+    }
+
+    public void setBlacklistNumbers(List<String> blacklistNumbers) {
+        this.blacklistNumbers = blacklistNumbers;
     }
 }

@@ -4,6 +4,7 @@ import br.com.assertiva.comunika.domain.Message;
 import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.FindByIdRequest;
 import br.com.assertiva.comunika.domain.requests.RequestResponseZenvia;
+import br.com.assertiva.comunika.domain.responses.MessagesCount;
 import br.com.assertiva.comunika.domain.responses.ResponseBatchMessages;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.service.MensagemService;
@@ -26,6 +27,14 @@ public class MessageController {
         List<Message> lstMensagem = mensagemService.buscarTodasMensagens(loteId);
 
         return ResponseEntity.ok().body(new ResponseBatchMessages(lstMensagem));
+    }
+
+    @GetMapping(value = "/campaign/{campaignId}")
+    public ResponseEntity findMessagesCounterByCampaign(@PathVariable Integer campaignId) {
+
+        MessagesCount count = mensagemService.findMessageStatusByCampaign(campaignId);
+
+        return ResponseEntity.ok().body(count);
     }
 
     @GetMapping(value = "/message/{id}")
