@@ -11,7 +11,7 @@ import java.util.List;
 public interface MensagemRepository extends MongoRepository<Message, Integer> {
 
     @Query(value = "{ 'batchId': ?0 }")
-    List<Message> mensagensDoLote(Integer loteId);
+    List<Message> findMessagesByBatch(Integer loteId);
 
     @Query(value = "{ 'campaignId': ?0 }")
     List<Message> campaignMessages(Integer campaignId);

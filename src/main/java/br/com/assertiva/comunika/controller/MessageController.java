@@ -24,7 +24,7 @@ public class MessageController {
     @GetMapping(value = "/batch/{loteId}")
     public ResponseEntity buscarTodasMensagensDoLote(@PathVariable Integer loteId) {
 
-        List<Message> lstMensagem = mensagemService.buscarTodasMensagens(loteId);
+        List<Message> lstMensagem = mensagemService.findAllMessagesByBatch(loteId);
 
         return ResponseEntity.ok().body(new ResponseBatchMessages(lstMensagem));
     }
@@ -40,7 +40,7 @@ public class MessageController {
     @GetMapping(value = "/message/{id}")
     public ResponseEntity buscarTodasMensagensDoLote(@PathVariable String id) {
 
-        Message message = mensagemService.buscarMensagemPorId(id);
+        Message message = mensagemService.findMessageById(id);
 
         return ResponseEntity.ok().body(message);
     }
@@ -48,7 +48,7 @@ public class MessageController {
     @PutMapping(value = "/update")
     public ResponseEntity atualizarMensagens(@RequestBody FindByIdRequest messages) throws BadRequestException {
 
-        List<Message> lstMensagem = mensagemService.atualizarMensagens(messages.getMessages());
+        List<Message> lstMensagem = mensagemService.updateMessages(messages.getMessages());
 
         return ResponseEntity.ok().body(lstMensagem);
     }
@@ -65,7 +65,7 @@ public class MessageController {
     @PostMapping
     public ResponseEntity incluirMensagensPorLote(@RequestBody CreateMessagesRequest request) {
 
-        List<Message> returnList = mensagemService.salvarMensagens(request);
+        List<Message> returnList = mensagemService.saveMessages(request);
 
         return ResponseEntity.created(null).body(returnList);
     }

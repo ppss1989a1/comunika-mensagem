@@ -11,7 +11,6 @@ import br.com.assertiva.comunika.repository.MensagemRepository;
 import br.com.assertiva.comunika.utils.LocalDateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,22 +23,25 @@ public class MensagemService {
 
     private static final Logger logger = LoggerFactory.getLogger(MensagemService.class);
 
-    @Autowired
-    MensagemRepository mensagemRepository;
+    private MensagemRepository mensagemRepository;
 
-    public List<Message> buscarTodasMensagens(Integer loteId) {
+    public MensagemService(MensagemRepository mensagemRepository) {
+        this.mensagemRepository = mensagemRepository;
+    }
 
-        List<Message> list = mensagemRepository.mensagensDoLote(loteId);
+    public List<Message> findAllMessagesByBatch(Integer loteId) {
+
+        List<Message> list = mensagemRepository.findMessagesByBatch(loteId);
 
         return list;
     }
 
-    public Message buscarMensagemPorId(String id) {
+    public Message findMessageById(String id) {
 
         return mensagemRepository.idMessages(id);
     }
 
-    public List<Message> atualizarMensagens(List<Message> messages) throws BadRequestException {
+    public List<Message> updateMessages(List<Message> messages) throws BadRequestException {
 
         return mensagemRepository.saveAll(messages);
     }
@@ -67,7 +69,7 @@ public class MensagemService {
         return mensagemRepository.saveAll(lstToUpdate);
     }
 
-    public List<Message> salvarMensagens(CreateMessagesRequest request) {
+    public List<Message> saveMessages(CreateMessagesRequest request) {
 
         List<Message> lstMensagem = new ArrayList<>();
 
