@@ -12,10 +12,10 @@ public class ResponseZenvia {
     private String id;
 
     @JsonProperty("message")
-    String message;
+    private String message;
 
     @JsonProperty("phone")
-    String phone;
+    private String phone;
 
     // id Lote
     @JsonProperty(value = "aggregatedId")
@@ -50,7 +50,7 @@ public class ResponseZenvia {
     private String detailDescription;
 
     @JsonProperty("campaignId")
-    Integer campaignId;
+    private Integer campaignId;
 
     public ResponseZenvia() {
     }
