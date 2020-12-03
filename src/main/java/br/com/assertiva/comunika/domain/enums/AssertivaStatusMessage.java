@@ -18,18 +18,25 @@ public enum AssertivaStatusMessage {
         this.id = id;
     }
 
-    public static AssertivaStatusMessage valueOf(Integer value){
+    public static AssertivaStatusMessage valueOf(Integer value) {
         switch (value) {
-            case 1: return SENDED_WITH_CONFIRMATION;
-            case 2: return SENDED_WITHOUT_CONFIRMATION;
-            case 3: return WAITING_TO_SEND;
-            case 4: return CANCELED;
-            case 5: return STOPPED;
-            case 6: return BLACKLIST;
-            case 7: return ERROR;
-            default: return  null;
+            case 1:
+                return SENDED_WITH_CONFIRMATION;
+            case 2:
+                return SENDED_WITHOUT_CONFIRMATION;
+            case 3:
+                return WAITING_TO_SEND;
+            case 4:
+                return CANCELED;
+            case 5:
+                return STOPPED;
+            case 6:
+                return BLACKLIST;
+            case 7:
+                return ERROR;
+            default:
+                return null;
         }
-
     }
 
     public String getDescription() {

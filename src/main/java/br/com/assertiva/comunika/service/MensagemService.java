@@ -5,6 +5,7 @@ import br.com.assertiva.comunika.domain.Message;
 import br.com.assertiva.comunika.domain.dto.MessagePagination;
 import br.com.assertiva.comunika.domain.dto.Page;
 import br.com.assertiva.comunika.domain.enums.AssertivaStatusMessage;
+import br.com.assertiva.comunika.domain.enums.ZenviaStatusMessage;
 import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.ResponseZenvia;
 import br.com.assertiva.comunika.domain.responses.MessagesCount;
@@ -59,7 +60,7 @@ public class MensagemService {
             Message message = new Message();
 
             message.setId(response.getId().replace("V3-", ""));
-            message.setStatus(Integer.valueOf(response.getStatusCode()));
+            message.setStatus(obtainCodeStatusFromZenviaResponse(Integer.valueOf(response.getStatusCode())));
             message.setPhone(response.getPhone());
             message.setMessage(response.getMessage());
             message.setCampaignId(response.getCampaignId());
@@ -71,6 +72,27 @@ public class MensagemService {
         });
 
         return mensagemRepository.saveAll(lstToUpdate);
+    }
+
+    private Integer obtainCodeStatusFromZenviaResponse(Integer statusCode) {
+
+        if (statusCode.equals(ZenviaStatusMessage.OK.getId()) || statusCode.equals(ZenviaStatusMessage.SENT.getId())) {
+            return AssertivaStatusMessage.SENDED_WITHOUT_CONFIRMATION.getId();
+        } else if (statusCode.equals(ZenviaStatusMessage.DELIVERED.getId())) {
+            return AssertivaStatusMessage.SENDED_WITH_CONFIRMATION.getId();
+        } else if (statusCode.equals(ZenviaStatusMessage.SCHEDULED.getId())) {
+            return AssertivaStatusMessage.WAITING_TO_SEND.getId();
+        } else if (statusCode.equals(ZenviaStatusMessage.BLOCKED_NO_COVERAGE.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.BLOCKED_BLACK_LISTED.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.BLOCKED_INVALID_NUMBER.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.BLOCKED_CONTENT_NOT_ALLOWED_OR_EXPIRED.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.NOT.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.ERROR.getId()) ||
+                statusCode.equals(ZenviaStatusMessage.BLOCKED.getId())) {
+            return AssertivaStatusMessage.ERROR.getId();
+        } else {
+            return AssertivaStatusMessage.ERROR.getId();
+        }
     }
 
     public List<Message> saveMessages(CreateMessagesRequest request) {
