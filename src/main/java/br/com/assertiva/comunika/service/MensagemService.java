@@ -16,8 +16,13 @@ import br.com.assertiva.comunika.utils.LocalDateTimeUtils;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,8 @@ public class MensagemService {
     private static final Logger logger = LoggerFactory.getLogger(MensagemService.class);
 
     private MensagemRepository mensagemRepository;
+
+    private MongoOperations add;
 
     public MensagemService(MensagemRepository mensagemRepository) {
         this.mensagemRepository = mensagemRepository;
@@ -58,15 +65,21 @@ public class MensagemService {
         messages.forEach(response -> {
 
             Message message = new Message();
-
             message.setId(response.getId().replace("V3-", ""));
             message.setStatus(obtainCodeStatusFromZenviaResponse(Integer.valueOf(response.getStatusCode())));
+/*
             message.setPhone(response.getPhone());
             message.setMessage(response.getMessage());
             message.setCampaignId(response.getCampaignId());
             message.setBatchId(response.getBatchId());
             message.setUpdatedAt(dateTimeUtils.nowFortaleza());
             message.setSchedule(dateTimeUtils.stringToDate(response.getSchedule()));
+*/
+            Query query = new Query();
+            Update update = new Update().set("status", message.getStatus()).set("updatedAt", dateTimeUtils.nowFortaleza());
+            query.addCriteria(Criteria.where("id").is(message.getId()));
+
+            add.updateFirst(query, update, Message.class);
 
             lstToUpdate.add(message);
         });

@@ -1,10 +1,6 @@
 package br.com.assertiva.comunika.domain.requests;
 
-import br.com.assertiva.comunika.config.CustomLocalDateDeserializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import java.time.LocalDateTime;
 
 public class ResponseZenvia {
 
