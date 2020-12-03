@@ -2,13 +2,17 @@ package br.com.assertiva.comunika.service;
 
 import br.com.assertiva.comunika.domain.Batch;
 import br.com.assertiva.comunika.domain.Message;
+import br.com.assertiva.comunika.domain.dto.MessagePagination;
+import br.com.assertiva.comunika.domain.dto.Page;
 import br.com.assertiva.comunika.domain.enums.AssertivaStatusMessage;
 import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.ResponseZenvia;
 import br.com.assertiva.comunika.domain.responses.MessagesCount;
+import br.com.assertiva.comunika.domain.responses.Pagination;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.repository.MensagemRepository;
 import br.com.assertiva.comunika.utils.LocalDateTimeUtils;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -146,5 +150,70 @@ public class MensagemService {
         Long waitingToSend = lst.stream().filter(msg -> AssertivaStatusMessage.WAITING_TO_SEND.getId().equals(msg.getStatus())).count();
 
         return new MessagesCount(sendedWithConfirmation, sendedWithoutConfirmation, waitingToSend, canceled, paused, blacklist, error);
+    }
+
+    public Pagination findMessageByCampaignPageable(Integer campaignId, Integer offSet, Integer page) {
+
+        List<Message> lst = mensagemRepository.campaignMessages(campaignId);
+
+        List<List<Message>> paginacao = Lists.partition(lst, offSet);
+
+        Page pages = createPagination(page, paginacao.size());
+
+        List<MessagePagination> messages = new ArrayList<>();
+
+        List<Message> pageToReturn = paginacao.get(page);
+
+        for (Message message : pageToReturn) {
+
+            MessagePagination messagePagination = new MessagePagination();
+            messagePagination.setMessage(message.getMessage());
+//            messagePagination.setDate(message.getSchedule().toString());
+            messagePagination.setPhone(message.getPhone());
+            messagePagination.setStatus(AssertivaStatusMessage.valueOf(message.getStatus()).getDescription());
+
+            messages.add(messagePagination);
+        }
+
+        return new Pagination(messages, pages);
+    }
+
+    private Page createPagination(Integer page, Integer lastPage) {
+
+        Integer nextPage = page + 1;
+        Integer beforePage = page - 1;
+        Integer beforeLastPage = lastPage - 1;
+        Integer secondPage = 2;
+        Integer firstPage = 1;
+
+        Page pages = new Page();
+
+        if (page.equals(firstPage)) {
+
+            pages.setNext(nextPage);
+            pages.setLast(lastPage);
+        } else if (page.equals(lastPage)) {
+
+            pages.setFirst(firstPage);
+            pages.setBefore(beforePage);
+        } else if (page.equals(secondPage)) {
+
+            pages.setFirst(firstPage);
+            pages.setNext(nextPage);
+            pages.setLast(lastPage);
+        } else if (page.equals(beforeLastPage)) {
+
+            pages.setFirst(firstPage);
+            pages.setBefore(beforePage);
+            pages.setLast(lastPage);
+        } else {
+
+            pages.setFirst(firstPage);
+            pages.setBefore(beforePage);
+            pages.setNext(nextPage);
+            pages.setLast(lastPage);
+        }
+
+        return pages;
     }
 }

@@ -8,8 +8,7 @@ public enum AssertivaStatusMessage {
     CANCELED("Cancelada", 4),
     STOPPED("Pausada", 5),
     BLACKLIST("Blacklist", 6),
-    ERROR("Erro", 7)
-    ;
+    ERROR("Erro", 7);
 
     String description;
     Integer id;
@@ -17,6 +16,20 @@ public enum AssertivaStatusMessage {
     AssertivaStatusMessage(String description, Integer id) {
         this.description = description;
         this.id = id;
+    }
+
+    public static AssertivaStatusMessage valueOf(Integer value){
+        switch (value) {
+            case 1: return SENDED_WITH_CONFIRMATION;
+            case 2: return SENDED_WITHOUT_CONFIRMATION;
+            case 3: return WAITING_TO_SEND;
+            case 4: return CANCELED;
+            case 5: return STOPPED;
+            case 6: return BLACKLIST;
+            case 7: return ERROR;
+            default: return  null;
+        }
+
     }
 
     public String getDescription() {

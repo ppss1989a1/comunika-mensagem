@@ -5,6 +5,7 @@ import br.com.assertiva.comunika.domain.requests.CreateMessagesRequest;
 import br.com.assertiva.comunika.domain.requests.FindByIdRequest;
 import br.com.assertiva.comunika.domain.requests.RequestResponseZenvia;
 import br.com.assertiva.comunika.domain.responses.MessagesCount;
+import br.com.assertiva.comunika.domain.responses.Pagination;
 import br.com.assertiva.comunika.domain.responses.ResponseBatchMessages;
 import br.com.assertiva.comunika.exception.BadRequestException;
 import br.com.assertiva.comunika.service.MensagemService;
@@ -29,12 +30,20 @@ public class MessageController {
         return ResponseEntity.ok().body(new ResponseBatchMessages(lstMensagem));
     }
 
-    @GetMapping(value = "/campaign/{campaignId}")
+    @GetMapping(value = "/campaign/status/{campaignId}")
     public ResponseEntity findMessagesCounterByCampaign(@PathVariable Integer campaignId) {
 
         MessagesCount count = mensagemService.findMessageStatusByCampaign(campaignId);
 
         return ResponseEntity.ok().body(count);
+    }
+
+    @GetMapping(value = "/campaign/{campaignId}")
+    public ResponseEntity findListMessagesByCampaign(@PathVariable Integer campaignId, @RequestParam Integer offSet, @RequestParam Integer page) {
+
+        Pagination pagination = mensagemService.findMessageByCampaignPageable(campaignId, offSet, page);
+
+        return ResponseEntity.status(206).body(pagination);
     }
 
     @GetMapping(value = "/message/{id}")
