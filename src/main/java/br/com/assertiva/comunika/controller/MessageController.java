@@ -55,10 +55,9 @@ public class MessageController {
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity atualizarMensagens(@RequestBody FindByIdRequest messages) throws BadRequestException {
+    public ResponseEntity updateMessages(@RequestBody FindByIdRequest messages) throws BadRequestException {
 
-        List<Message> lstMensagem = mensagemService.updateMessages(messages.getMessages());
-
+        List<Message> lstMensagem = mensagemService.updateMessagesZenvia(messages.getMessages());
         return ResponseEntity.ok().body(lstMensagem);
     }
 

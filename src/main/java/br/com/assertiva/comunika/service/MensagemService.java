@@ -37,8 +37,9 @@ public class MensagemService {
 
     private MongoOperations add;
 
-    public MensagemService(MensagemRepository mensagemRepository) {
+    public MensagemService(MensagemRepository mensagemRepository, MongoOperations add) {
         this.mensagemRepository = mensagemRepository;
+        this.add = add;
     }
 
     public List<Message> findAllMessagesByBatch(Integer loteId) {
@@ -53,11 +54,6 @@ public class MensagemService {
         return mensagemRepository.idMessages(id);
     }
 
-    public List<Message> updateMessages(List<Message> messages) throws BadRequestException {
-
-        return mensagemRepository.saveAll(messages);
-    }
-
     public List<Message> updateMessagesZenvia(List<ResponseZenvia> messages) {
 
         List<Message> lstToUpdate = new ArrayList<>();
@@ -67,14 +63,6 @@ public class MensagemService {
             Message message = new Message();
             message.setId(response.getId().replace("V3-", ""));
             message.setStatus(obtainCodeStatusFromZenviaResponse(Integer.valueOf(response.getStatusCode())));
-/*
-            message.setPhone(response.getPhone());
-            message.setMessage(response.getMessage());
-            message.setCampaignId(response.getCampaignId());
-            message.setBatchId(response.getBatchId());
-            message.setUpdatedAt(dateTimeUtils.nowFortaleza());
-            message.setSchedule(dateTimeUtils.stringToDate(response.getSchedule()));
-*/
             Query query = new Query();
             Update update = new Update().set("status", message.getStatus()).set("updatedAt", dateTimeUtils.nowFortaleza());
             query.addCriteria(Criteria.where("id").is(message.getId()));
@@ -84,7 +72,7 @@ public class MensagemService {
             lstToUpdate.add(message);
         });
 
-        return mensagemRepository.saveAll(lstToUpdate);
+        return null;
     }
 
     private Integer obtainCodeStatusFromZenviaResponse(Integer statusCode) {

@@ -29,7 +29,6 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
@@ -89,7 +88,6 @@
             <artifactId>guava</artifactId>
             <version>30.0-jre</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -100,5 +98,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

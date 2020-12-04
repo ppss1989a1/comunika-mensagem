@@ -7,20 +7,16 @@ import java.util.List;
 
 public class FindByIdRequest {
 
-    List<Message> messages = new ArrayList<>();
+    private List<ResponseZenvia> messages = new ArrayList<>();
 
     public FindByIdRequest() {
     }
 
-    public FindByIdRequest(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public List<Message> getMessages() {
+    public List<ResponseZenvia> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
+    public void setMessages(List<ResponseZenvia> messages) {
         this.messages = messages;
     }
 }
