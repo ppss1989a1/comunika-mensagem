@@ -153,7 +153,7 @@ public class MensagemService {
                 mensagem.setStatus(batch.getStatus());
                 mensagem.setCampaignId(request.getCampaign().getId());
                 mensagem.setRouteId(request.getCampaign().getRouteId());
-
+                mensagem.setSchedule(batch.getSchedule());
                 lstMensagem.add(mensagem);
                 count++;
             }

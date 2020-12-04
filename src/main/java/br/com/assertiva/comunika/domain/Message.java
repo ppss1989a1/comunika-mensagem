@@ -36,7 +36,7 @@ public class Message implements Serializable {
     LocalDateTime updatedAt;
 
     @JsonProperty("schedule")
-    LocalDateTime schedule;
+    String schedule;
 
     public Message() {
     }
@@ -97,11 +97,11 @@ public class Message implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getSchedule() {
+    public String getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(LocalDateTime schedule) {
+    public void setSchedule(String schedule) {
         this.schedule = schedule;
     }
 

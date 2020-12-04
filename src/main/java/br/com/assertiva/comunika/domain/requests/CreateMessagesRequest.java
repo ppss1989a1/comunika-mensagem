@@ -4,6 +4,7 @@ import br.com.assertiva.comunika.domain.Batch;
 import br.com.assertiva.comunika.domain.Campaign;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
