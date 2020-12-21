@@ -1,6 +1,6 @@
-def projectName="comunika-configuracao"
+def projectName="comunika-mensagem"
 def clusterName="cluster-devtst"
-def namespace="comunika-configuracao"
+def namespace="comunika-mensagem"
 def imageName="$projectName"
 def urlEcr="392721527794.dkr.ecr.us-east-1.amazonaws.com/$imageName"
 def ambiente=""
@@ -21,13 +21,13 @@ pipeline {
                     if (env.BRANCH_NAME == "master") {
                         ambiente="master"
                         clusterName="cluster-prd"
-                        namespace="comunika-configuracao"
+                        namespace="comunika-mensagem"
                     } else if (env.BRANCH_NAME == "release") {
                         ambiente="release"
-                        namespace="comunika-configuracao"
+                        namespace="comunika-mensagem"
                     } else if (env.BRANCH_NAME == "desenv") {
                         ambiente="desenv"
-                        namespace="comunika-configuracao"
+                        namespace="comunika-mensagem"
                     } else {
                         ambiente="develop"
                     }

@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: cadastro-backoffice-virtual-service
-  namespace: comunika-configuracao
+  namespace: comunika-mensagem
 spec:
   hosts:
     - "apigateway-dev.assertivasolucoes.com.br"
@@ -11,30 +11,30 @@ spec:
   http:
     - match:
         - uri:
-            prefix: /comunika-configuracao/
+            prefix: /comunika-mensagem/
         - uri:
-            prefix: /comunika-configuracao
+            prefix: /comunika-mensagem
       rewrite:
         uri: /
       route:
         - destination:
             port:
               number: 80
-            host: "comunika-configuracao"
+            host: "comunika-mensagem"
 ---
 kind: "Service"
 apiVersion: "v1"
 metadata:
-  name: "comunika-configuracao"
+  name: "comunika-mensagem"
   namespace: comunika-configuracao
   labels:
-    app: "comunika-configuracao"
+    app: "comunika-mensagem"
 spec:
   ports:
     - port: 80
       targetPort: "http-cadbo"
   selector:
-    app: "comunika-configuracao"
+    app: "comunika-mensagem"
 ---
 apiVersion: apps/v1
 kind: Deployment
