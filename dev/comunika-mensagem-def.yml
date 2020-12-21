@@ -1,0 +1,81 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cadastro-backoffice-virtual-service
+  namespace: comunika-configuracao
+spec:
+  hosts:
+    - "apigateway-dev.assertivasolucoes.com.br"
+  gateways:
+    - default/istio-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /comunika-configuracao/
+        - uri:
+            prefix: /comunika-configuracao
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            port:
+              number: 80
+            host: "comunika-configuracao"
+---
+kind: "Service"
+apiVersion: "v1"
+metadata:
+  name: "comunika-configuracao"
+  namespace: comunika-configuracao
+  labels:
+    app: "comunika-configuracao"
+spec:
+  ports:
+    - port: 80
+      targetPort: "http-cadbo"
+  selector:
+    app: "comunika-configuracao"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comunika-configuracao
+  namespace: comunika-configuracao
+spec:
+  selector:
+    matchLabels:
+      app: comunika-configuracao
+      version: develop
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: comunika-configuracao
+        version: develop
+    spec:
+      containers:
+        - name: comunika-configuracao
+          image: 392721527794.dkr.ecr.us-east-1.amazonaws.com/comunika-configuracao:release-latest
+          imagePullPolicy: Always
+          ports:
+            - name: http-cadbo
+              containerPort: 5000
+          livenessProbe: # restart on fail
+            httpGet:
+              path: /actuator/health
+              port: 5000
+            initialDelaySeconds: 45
+            periodSeconds: 5
+            timeoutSeconds: 10
+          readinessProbe: # application startup, initial setup
+            httpGet:
+              path: /actuator/health
+              port: 5000
+            initialDelaySeconds: 45
+            periodSeconds: 5
+            timeoutSeconds: 10
+            successThreshold: 3
+            env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: default
+            
