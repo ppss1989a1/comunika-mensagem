@@ -191,7 +191,7 @@ public class MensagemService {
 
             MessagePagination messagePagination = new MessagePagination();
             messagePagination.setMessage(message.getMessage());
-//            messagePagination.setDate(message.getSchedule().toString());
+            messagePagination.setDate(message.getSchedule().toString());
             messagePagination.setPhone(message.getPhone());
             messagePagination.setStatus(AssertivaStatusMessage.valueOf(message.getStatus()).getDescription());
 

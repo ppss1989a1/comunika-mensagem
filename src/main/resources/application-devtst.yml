@@ -3,4 +3,4 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://pedro:teste123@cluster0.12tls.mongodb.net/mensagem?retryWrites=true&w=majority
+      uri: mongodb+srv://smsprd:lANIkPNAtT3kc47k@sms-env.h7jxl.mongodb.net/smsenv
